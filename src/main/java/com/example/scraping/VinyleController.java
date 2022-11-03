@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 
 public class VinyleController {
     DiscogsScroll discogsScroll = new DiscogsScroll();
@@ -23,7 +23,7 @@ public class VinyleController {
     CultureFactoryScroll cultureFactoryScroll = new CultureFactoryScroll();
     Email email = new Email();
     @FXML
-    private MenuItem quitter, addbdd;
+    private MenuItem quitter, saveastextfile, addbdd;
     @FXML
     private TextField titre,min, max;
     @FXML
@@ -64,12 +64,13 @@ public class VinyleController {
         error.setText("");
 
     }
-    public void displaySearch() throws Exception {
+    public String displaySearch() throws Exception {
         String title = titre.getText();
         String type = genre.getValue();
         String time = String.valueOf(date.getValue());
         String minValue = min.getText();
         String maxValue = max.getText();
+        String results = "";
         String err = "";
         if(type.equals("Selectionnez un genre")){
             type = "";
@@ -81,27 +82,27 @@ public class VinyleController {
                 err = "Enter or choose a search field";
             } else {
                 if(dis.isSelected()){
-                    String resDis = discogsScroll.search(inputModify(searchWord));
-                    showresults.setText(resDis);
+                    results = discogsScroll.search(inputModify(searchWord));
+                    showresults.setText(results);
                 } else if(fnac.isSelected()){
-                    String resFnac = fnacScroll.search(inputModify(searchWord));
-                    showresults.setText(resFnac);
+                    results = fnacScroll.search(inputModify(searchWord));
+                    showresults.setText(results);
                 } else if (vin.isSelected()){
-                    String resVin = vinylCornerScroll.search(searchWord);
-                    showresults.setText(resVin);
+                    results = vinylCornerScroll.search(searchWord);
+                    showresults.setText(results);
                 } else if(leb.isSelected()) {
                     if(minValue.equals("")|| maxValue.equals("")){
                         minValue = "0";
                         maxValue = String.valueOf(Integer.MAX_VALUE);
                     }
-                    String resLebon = leboncoinScroll.search (searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue));
-                    showresults.setText(resLebon);
+                    results = leboncoinScroll.search (searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue));
+                    showresults.setText(results);
                 }else if(mes.isSelected()){
-                    String resMes = mesvinylesScroll.search(searchWord);
-                    showresults.setText(resMes);
+                    results = mesvinylesScroll.search(searchWord);
+                    showresults.setText(results);
                 } else if (cul.isSelected()){
-                    String resCul = cultureFactoryScroll.search(inputModify(title));
-                    showresults.setText(resCul);
+                    results = cultureFactoryScroll.search(inputModify(title));
+                    showresults.setText(results);
                 }
                 else {
                     err = "Site not working choose another site";
@@ -111,6 +112,25 @@ public class VinyleController {
             err = "CHOOSE A SITE";
         }
         error.setText(err);
+        return results;
+    }
+
+    @FXML
+    private void makeTextFile() throws Exception {
+        String title = titre.getText();
+        String type = genre.getValue();
+        if(type.equals("Selectionnez un genre")){
+            type = "";
+        }
+        String searchWord = (title+" "+type).trim();
+        File rep = new File("util");
+        rep.mkdir();
+        String nomFichierSortie = "util" + File.separator + searchWord + ".txt";
+        PrintWriter write;
+        write = new PrintWriter(new BufferedWriter
+                (new FileWriter(nomFichierSortie)));
+        write.println(displaySearch());
+        write.close();
     }
 
     private String toCapitalize(String str){
@@ -135,7 +155,6 @@ public class VinyleController {
 
     public static String checkDescription(final HtmlElement e) {
         if (e == null) return "Null";
-
         return e.getTextContent();
     }
 
@@ -147,7 +166,7 @@ public class VinyleController {
         Label label2 = new Label("Veuillez saisir lémail de léxpediteur: ");
         TextField emailInput = new TextField();
         Button button2 = new Button("Envoyer");
-        button2.setOnAction(e -> email.sendMail(emailInput.getText()));
+        button2.setOnAction(e -> email.sendMail(emailInput.getText(), titre.getText()));
         Button button1= new Button("Annuler");
         button1.setOnAction(e -> emailPopUp.close());
         VBox layout= new VBox(10);

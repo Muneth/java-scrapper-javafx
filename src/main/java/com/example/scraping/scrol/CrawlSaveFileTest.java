@@ -34,11 +34,10 @@ CrawlSaveFileTest {
             try{
                 HtmlPage htmlPage1 = webClient.getPage(resultUrl);
                 String title = ((HtmlHeading1) htmlPage1.getByXPath(".//h1[@class='h1 productpage_title']").get(0)).getTextContent();
-                String price = ((HtmlDivision) htmlPage1.getByXPath(".//div[@class='current-price']").get(0)).getTextContent();
-                String priceByDiv = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/section/div/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div[1]/div/span").get(0)).getTextContent();
+                String price = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/section/div/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div[1]/div/span").get(0)).getTextContent();
                 String description = ((HtmlDivision) htmlPage1.getByXPath(".//div[@class='product-description']").get(0)).getTextContent();
                 show += "Title :- " + title + '\n' +
-                        "Price :- " + priceByDiv + '\n' +
+                        "Price :- " + price + '\n' +
                         "Description :- " + description + '\n' +
                         "URL :- " + resultUrl +
                         "\n--------------------------------------------------------------------------------------------\n";

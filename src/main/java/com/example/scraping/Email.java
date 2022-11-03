@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class Email {
-    public void sendMail(String mail) {
+    public void sendMail(String mail, String filename) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         // Configure API key authorization: api-key
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
@@ -31,20 +31,20 @@ public class Email {
             toList.add(to);
             SendSmtpEmailAttachment attachment = new SendSmtpEmailAttachment();
             attachment.setName("test.txt");
-            byte[] encode = Files.readAllBytes(Paths.get("C:\\Users\\munee\\Desktop\\test.txt"));
+            byte[] encode = Files.readAllBytes(Paths.get("C:\\Users\\munee\\Desktop\\Projet\\util\\"+filename+".txt"));
             attachment.setContent(encode);
             List<SendSmtpEmailAttachment> attachmentList = new ArrayList<SendSmtpEmailAttachment>();
             attachmentList.add(attachment);
             Properties headers = new Properties();
             headers.setProperty("Some-Custom-Name", "unique-id-1234");
             Properties params = new Properties();
-            params.setProperty("parameter", "My param value");
-            params.setProperty("subject", "New Subject");
+            params.setProperty("parameter", "for your search");
+            params.setProperty("subject", "New Search");
             SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.setSender(sender);
             sendSmtpEmail.setTo(toList);
-            sendSmtpEmail.setHtmlContent("<html><body><h1>This is test 4 {{params.parameter}}</h1></body></html>");
-            sendSmtpEmail.setSubject("My {{params.subject}}");
+            sendSmtpEmail.setHtmlContent("<html><body><h1>Here are the results {{params.parameter}}</h1></body></html>");
+            sendSmtpEmail.setSubject("{{params.subject}}");
             sendSmtpEmail.setAttachment(attachmentList);
             sendSmtpEmail.setHeaders(headers);
             sendSmtpEmail.setParams(params);
