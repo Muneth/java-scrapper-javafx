@@ -7,10 +7,10 @@ import com.gargoylesoftware.htmlunit.html.HtmlHeading1;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import java.util.List;
-public class Scrol4 {
+public class CultureFactoryScroll {
     public String search(String searchWord) throws Exception{
 
-        String url = "https://culturefactory.fr/recherche?controller=search&s=" + searchWord;
+        String url = "https://culturefactory.fr/recherche?controller=search&s=" + searchWord +"+vinyles";
 
         WebClient webClient = new WebClient();
 
@@ -22,7 +22,7 @@ public class Scrol4 {
         List<HtmlAnchor> links = htmlPage.getByXPath("//a[@class='thumbnail product-thumbnail']");
 
         String show = "";
-        int limit = 3;
+        int limit = 5;
         for (int i = 0; i < links.size(); i++) {
             if (i == limit){
                 break;

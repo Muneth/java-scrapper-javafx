@@ -1,6 +1,5 @@
 package com.example.scraping.scrol;
 
-import com.example.scraping.BddController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
@@ -11,10 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Leboncoin {
+public class CrawlReturnScrollTest {
     private final WebClient client;
 
-    public Leboncoin() {
+    public CrawlReturnScrollTest() {
         this.client = new WebClient() {{
             getOptions().setUseInsecureSSL(false);
             getOptions().setCssEnabled(false);
@@ -22,19 +21,19 @@ public class Leboncoin {
         }};
     }
 
-    public List<Scrol> search(final String query, final int maxResults) throws IOException {
+    public List<Scroll> search(final String query, final int maxResults) throws IOException {
         final String url1 = String.format("https://www.leboncoin.fr/recherche?text=%s", query.replace(" ", "%20"));
         String url = "https://mesvinyles.fr/fr/recherche?controller=search&s=" + query;
 
         return queryResults(url, maxResults);
     }
 
-    public List<Scrol> queryResults(final String url, final int maxResults) throws IOException {
+    public List<Scroll> queryResults(final String url, final int maxResults) throws IOException {
         final HtmlPage page = client.getPage(url);
         //final List<HtmlAnchor> entries = page.getByXPath("//a[@data-qa-id='aditem_container']");
         final List<HtmlAnchor> entries = page.getByXPath("//a[@class='thumbnail product-thumbnail']");
 
-        final ArrayList<Scrol> results = new ArrayList<>();
+        final ArrayList<Scroll> results = new ArrayList<>();
 
         int count = 0;
         for (final HtmlAnchor entry : entries) {
@@ -45,7 +44,7 @@ public class Leboncoin {
         return results;
     }
 
-    private Scrol scrapResult(final HtmlAnchor anchor) throws IOException {
+    private Scroll scrapResult(final HtmlAnchor anchor) throws IOException {
         //final String url = String.format("https://www.leboncoin.fr%s", anchor.getHrefAttribute());
         String url = String.valueOf(anchor.click().getUrl());
         final HtmlPage page = client.getPage(url);
@@ -54,10 +53,10 @@ public class Leboncoin {
         final HtmlDivision price = page.getFirstByXPath("/html/body/main/section/div/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div[1]/div/span");
         final HtmlDivision description = page.getFirstByXPath(".//div[@class='product-description']");
 
-        return new Scrol(
+        return new Scroll(
                 title.getTextContent(),
                 description == null ? "No description" : description.getTextContent(),
-                url,
+                url, url,
                 price == null ? "No price" : price
                         .getTextContent()
                         .replaceAll("€.*", "€"));

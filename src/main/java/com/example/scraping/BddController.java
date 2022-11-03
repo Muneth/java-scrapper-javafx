@@ -1,6 +1,6 @@
 package com.example.scraping;
 
-import com.example.scraping.scrol.Scrol;
+import com.example.scraping.scrol.Scroll;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +25,7 @@ public class BddController {
         return con;
     }
 
-    public static boolean insertVinyles(Scrol scrol){
+    public static boolean insertVinyles(Scroll scroll){
         boolean f = false;
 
         try{
@@ -37,10 +37,10 @@ public class BddController {
             PreparedStatement preparedStatement = (PreparedStatement) con.prepareStatement(q);
 
 //              SET the value of parameters
-            preparedStatement.setString(1, scrol.getTitle());
-            preparedStatement.setString(2, scrol.getDiscription());
-            preparedStatement.setString(3, scrol.getPrice());
-            preparedStatement.setString(4, scrol.getUrl());
+            preparedStatement.setString(1, scroll.title());
+            preparedStatement.setString(2, scroll.description());
+            preparedStatement.setString(3, scroll.price());
+            preparedStatement.setString(4, scroll.url());
 
 //              EXECUTE
             preparedStatement.executeUpdate();

@@ -9,7 +9,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class Crawl {
+public class
+CrawlSaveFileTest {
     public static void main(String[] args) throws Exception {
 
         String url = "https://mesvinyles.fr/fr/recherche?controller=search&s=bob+marley";

@@ -17,7 +17,7 @@
             <CheckBox fx:id="cul" layoutX="54.0" layoutY="240.0" mnemonicParsing="false" text="Culturefactory.fr" />
         </Pane>
         <Pane layoutX="-1.0" layoutY="26.0" prefHeight="286.0" prefWidth="498.0">
-            <Label layoutX="14.0" layoutY="14.0" text="Rechererche Vinyle" textFill="#b99191" underline="true">
+            <Label layoutX="14.0" layoutY="14.0" text="Recherche Vinyle" textFill="#b99191" underline="true">
                 <font>
                     <Font size="20.0" />
                 </font>

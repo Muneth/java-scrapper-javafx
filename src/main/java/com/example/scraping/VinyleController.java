@@ -2,26 +2,26 @@ package com.example.scraping;
 
 
 import com.example.scraping.scrol.*;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 public class VinyleController {
-
+    DiscogsScroll discogsScroll = new DiscogsScroll();
+    FnacScroll fnacScroll = new FnacScroll();
+    VinylCornerScroll vinylCornerScroll = new VinylCornerScroll();
+    LeboncoinScroll leboncoinScroll = new LeboncoinScroll();
+    MesvinylesScroll mesvinylesScroll = new MesvinylesScroll();
+    CultureFactoryScroll cultureFactoryScroll = new CultureFactoryScroll();
     Email email = new Email();
-    Scrol1 scrol1 = new Scrol1();
-    Scrol2 scrol2 = new Scrol2();
-    Scrol3 scrol3 = new Scrol3();
-    Scrol4 scrol4 = new Scrol4();
     @FXML
     private MenuItem quitter, addbdd;
     @FXML
@@ -60,6 +60,7 @@ public class VinyleController {
         leb.setSelected(false);
         mes.setSelected(false);
         cul.setSelected(false);
+        showresults.setText("");
         error.setText("");
 
     }
@@ -70,30 +71,36 @@ public class VinyleController {
         String minValue = min.getText();
         String maxValue = max.getText();
         String err = "";
+        if(type.equals("Selectionnez un genre")){
+            type = "";
+        }
+        String searchWord = (title+" "+type).trim();
+
         if(mes.isSelected() || dis.isSelected() || fnac.isSelected() || vin.isSelected() || leb.isSelected() || cul.isSelected()){
-            if(title.equals("") && type.equals("Selectionnez un genre")){
+            if(title.equals("") && type.equals("")){
                 err = "Enter or choose a search field";
             } else {
-                if(mes.isSelected()){
-                    String searchWord = title+" "+type;
-                    String resMes = String.valueOf(scrol2.search(searchWord));
-                    showresults.setText(resMes);
-                } else if (fnac.isSelected()){
-                    try {
-                        String resFnac = scrol3.search(type);
-                        showresults.setText(resFnac);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-                } else if (leb.isSelected()) {
+                if(dis.isSelected()){
+                    String resDis = discogsScroll.search(inputModify(searchWord));
+                    showresults.setText(resDis);
+                } else if(fnac.isSelected()){
+                    String resFnac = fnacScroll.search(inputModify(searchWord));
+                    showresults.setText(resFnac);
+                } else if (vin.isSelected()){
+                    String resVin = vinylCornerScroll.search(searchWord);
+                    showresults.setText(resVin);
+                } else if(leb.isSelected()) {
                     if(minValue.equals("")|| maxValue.equals("")){
                         minValue = "0";
                         maxValue = String.valueOf(Integer.MAX_VALUE);
-                     }
-                    String resLebon = scrol1.search (title, Integer.parseInt(minValue), Integer.parseInt(maxValue));
+                    }
+                    String resLebon = leboncoinScroll.search (searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue));
                     showresults.setText(resLebon);
+                }else if(mes.isSelected()){
+                    String resMes = mesvinylesScroll.search(searchWord);
+                    showresults.setText(resMes);
                 } else if (cul.isSelected()){
-                    String resCul = scrol4.search(titreModify());
+                    String resCul = cultureFactoryScroll.search(inputModify(title));
                     showresults.setText(resCul);
                 }
                 else {
@@ -106,8 +113,6 @@ public class VinyleController {
         error.setText(err);
     }
 
-    // Scroll 2 title modifier
-    //
     private String toCapitalize(String str){
         if(titre.getText().equals("")){
             return str;
@@ -122,11 +127,16 @@ public class VinyleController {
             return capitalizeWord.toString().trim().replace(" ", "+");
         }
     }
-    private String titreModify(){
-        String title = titre.getText();
+    private String inputModify(String wordReplace){
         String res = "";
-        res =  title.replace(" ", "+");
+        res =  wordReplace.replace(" ", "+");
         return res;
+    }
+
+    public static String checkDescription(final HtmlElement e) {
+        if (e == null) return "Null";
+
+        return e.getTextContent();
     }
 
     public void sendMailPopUp() throws IOException {
@@ -148,9 +158,7 @@ public class VinyleController {
         emailPopUp.showAndWait();
     }
 
-    Leboncoin leboncoin = new Leboncoin();
-
-
+    CrawlReturnScrollTest crawlReturnScrollTest = new CrawlReturnScrollTest();
     public void displaySear() throws Exception {
 //        String res = scrol2.search(titre.getText());
 //        showresults.setText(res);
@@ -177,6 +185,6 @@ public class VinyleController {
 //            }
 //        }
         error.setText("db class not working");
-        System.out.println("sorry db class fucked up");
+        System.out.println("db not working");
     }
 }
