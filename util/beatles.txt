@@ -1,0 +1,36 @@
+[Title :- Beatles (The)
+Genre :- Pop Rock
+Price :- 30,00 €
+Date :- 09/09/2009
+Description :- No Description
+URL :- https://www.vinylcorner.fr/pop-rock/833-beatles-for-sale-0094638241416.html
+--------------------------------------------------------------------------------------------
+, Title :- Beatles (The)
+Genre :- Pop Rock
+Price :- 25,00 €
+Date :- 09/09/2009
+Description :- No Description
+URL :- https://www.vinylcorner.fr/pop-rock/837-with-the-beatles-0094638242017.html
+--------------------------------------------------------------------------------------------
+, Title :- Beatles (The)
+Genre :- Pop Rock
+Price :- 25,00 €
+Date :- 20/01/2014
+Description :- No Description
+URL :- https://www.vinylcorner.fr/pop-rock/832-a-hard-day-s-night-0094638241317.html
+--------------------------------------------------------------------------------------------
+, Title :- Beatles (The)
+Genre :- Pop Rock
+Price :- 26,00 €
+Date :- 09/09/2009
+Description :- No Description
+URL :- https://www.vinylcorner.fr/pop-rock/834-help-0094638241515.html
+--------------------------------------------------------------------------------------------
+, Title :- Beatles (The)
+Genre :- Pop Rock
+Price :- 25,00 €
+Date :- 09/09/2009
+Description :- No Description
+URL :- https://www.vinylcorner.fr/pop-rock/835-please-please-me-0094638241614.html
+--------------------------------------------------------------------------------------------
+]

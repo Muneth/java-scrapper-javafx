@@ -7,6 +7,7 @@ module com.example.scraping {
     requires sib.api.v3.sdk;
     requires java.sql;
     requires htmlunit;
+    requires mysql.connector;
 
     opens com.example.scraping to javafx.fxml;
     exports com.example.scraping;

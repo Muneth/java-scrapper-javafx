@@ -2,17 +2,18 @@ package com.example.scraping;
 
 
 import com.example.scraping.scrol.*;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class VinyleController {
     DiscogsScroll discogsScroll = new DiscogsScroll();
@@ -64,7 +65,9 @@ public class VinyleController {
         error.setText("");
 
     }
-    public String displaySearch() throws Exception {
+
+    ArrayList<Scroll> scrollArrayList = new ArrayList<>();
+    public ArrayList<Scroll> displaySearch() throws Exception {
         String title = titre.getText();
         String type = genre.getValue();
         String time = String.valueOf(date.getValue());
@@ -82,13 +85,18 @@ public class VinyleController {
                 err = "Enter or choose a search field";
             } else {
                 if(dis.isSelected()){
-                    results = discogsScroll.search(inputModify(searchWord));
+                    results = discogsScroll.search(inputModify(searchWord)).toString();
                     showresults.setText(results);
                 } else if(fnac.isSelected()){
                     results = fnacScroll.search(inputModify(searchWord));
                     showresults.setText(results);
                 } else if (vin.isSelected()){
-                    results = vinylCornerScroll.search(searchWord);
+                    scrollArrayList = vinylCornerScroll.search(searchWord);
+//                    for (int i = 0; i <scrollArrayList.size() ; i++) {
+//
+//                    }
+
+                    results = vinylCornerScroll.search(searchWord).toString();
                     showresults.setText(results);
                 } else if(leb.isSelected()) {
                     if(minValue.equals("")|| maxValue.equals("")){
@@ -112,11 +120,11 @@ public class VinyleController {
             err = "CHOOSE A SITE";
         }
         error.setText(err);
-        return results;
+        return scrollArrayList;
     }
 
     @FXML
-    private void makeTextFile() throws Exception {
+    public void makeTextFile() throws Exception {
         String title = titre.getText();
         String type = genre.getValue();
         if(type.equals("Selectionnez un genre")){
@@ -127,10 +135,23 @@ public class VinyleController {
         rep.mkdir();
         String nomFichierSortie = "util" + File.separator + searchWord + ".txt";
         PrintWriter write;
-        write = new PrintWriter(new BufferedWriter
-                (new FileWriter(nomFichierSortie)));
+        write = new PrintWriter(new BufferedWriter(new FileWriter(nomFichierSortie)));
         write.println(displaySearch());
         write.close();
+    }
+
+    @FXML
+    private void askUserToSaveFile() throws FileNotFoundException {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("save your results");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File file = fileChooser.showSaveDialog(stage);
+        if(file != null){
+            PrintWriter writer = new PrintWriter(file);
+            writer.println(showresults.getText());
+            writer.close();
+        }
     }
 
     private String toCapitalize(String str){
@@ -148,17 +169,18 @@ public class VinyleController {
         }
     }
     private String inputModify(String wordReplace){
-        String res = "";
+        String res;
         res =  wordReplace.replace(" ", "+");
         return res;
     }
 
-    public static String checkDescription(final HtmlElement e) {
-        if (e == null) return "Null";
-        return e.getTextContent();
+    public static String checkIfNull(String s) {
+        if (s.equals("")) return "No Description";
+        return s;
     }
 
-    public void sendMailPopUp() throws IOException {
+    public void sendMailPopUp() throws Exception {
+        makeTextFile();
         Stage emailPopUp=new Stage();
         emailPopUp.initModality(Modality.APPLICATION_MODAL);
         emailPopUp.setTitle("Enovoi courriel");
@@ -177,33 +199,17 @@ public class VinyleController {
         emailPopUp.showAndWait();
     }
 
-    CrawlReturnScrollTest crawlReturnScrollTest = new CrawlReturnScrollTest();
-    public void displaySear() throws Exception {
-//        String res = scrol2.search(titre.getText());
-//        showresults.setText(res);
-//        try {
-//        final List<Scrol> results  = leboncoin.search(String.valueOf(titre), 3);
-//            for (Scrol result : results) {
-//               // showresults.setText(String.valueOf(result));
-//                System.out.println(result.toString());
-//            }
-//        } catch (Exception e) {
-//            System.out.println("not working ");
-//            throw new RuntimeException(e);
-//        }
-    }
 
     public void sendToDB() throws Exception {
-//        final List<Scrol> results  = leboncoin.search(String.valueOf(titre), 3);
-//        for (Scrol result : results){
-//        boolean ans = BddController.insertVinyles(result);
-//            if (ans) {
-//                System.out.println("Student is added successfully");
-//            } else {
-//                System.out.println("Something went wrong...");
-//            }
-//        }
-        error.setText("db class not working");
-        System.out.println("db not working");
+        BddController bddController = new BddController();
+        ArrayList<Scroll> scrollListToDb = displaySearch();
+        for (Scroll scroll : scrollListToDb) {
+            boolean answer = bddController.insertVinyles(scroll);
+            if (answer) {
+                System.out.println("Scroll is added successfully");
+            } else {
+                System.out.println("Something went wrong...");
+            }
+        }
     }
 }

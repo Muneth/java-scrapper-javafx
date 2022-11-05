@@ -1,14 +1,13 @@
 package com.example.scraping;
 
 import com.example.scraping.scrol.Scroll;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
 public class BddController {
-    static Connection con;
-    public static Connection createC(){
+    Connection con;
+    public Connection createC(){
         try{
 //      Load the driver
             Class.forName("com.mysql.jdbc.Driver");
@@ -17,7 +16,7 @@ public class BddController {
             String user = "root";
             String password = "";
             String url = "jdbc:mysql://localhost:3306/vinyles";
-            con = (Connection) DriverManager.getConnection(url,user,password);
+            con = DriverManager.getConnection(url,user,password);
 
         } catch (Exception e){
             e.printStackTrace();
@@ -25,22 +24,24 @@ public class BddController {
         return con;
     }
 
-    public static boolean insertVinyles(Scroll scroll){
+    public boolean insertVinyles(Scroll scroll){
         boolean f = false;
 
         try{
 //              JDBC CODE
-            Connection con = BddController.createC();
-            String q = "insert into vinylesss(title,description,prix,url) values(?,?,?,?)";
+            Connection connection = this.createC();
+            String q = "insert into vinylesss(title,genre,price,date,description,url) values(?,?,?,?,?,?)";
 
 //              PreparedStatement
-            PreparedStatement preparedStatement = (PreparedStatement) con.prepareStatement(q);
+            PreparedStatement preparedStatement = connection.prepareStatement(q);
 
 //              SET the value of parameters
-            preparedStatement.setString(1, scroll.title());
-            preparedStatement.setString(2, scroll.description());
-            preparedStatement.setString(3, scroll.price());
-            preparedStatement.setString(4, scroll.url());
+            preparedStatement.setString(1, scroll.getTitle());
+            preparedStatement.setString(2, scroll.getGenre());
+            preparedStatement.setString(3, scroll.getPrice());
+            preparedStatement.setString(4, scroll.getDate());
+            preparedStatement.setString(5, scroll.getDescription());
+            preparedStatement.setString(6, scroll.getUrl());
 
 //              EXECUTE
             preparedStatement.executeUpdate();

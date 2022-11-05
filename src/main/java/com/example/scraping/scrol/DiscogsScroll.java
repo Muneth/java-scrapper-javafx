@@ -6,7 +6,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import java.util.ArrayList;
 import java.util.List;
 public class DiscogsScroll {
-    public String search(String searchWord) throws Exception{
+    public ArrayList<Scroll> search(String searchWord) throws Exception{
 
         String url = String.format("https://www.discogs.com/fr/sell/list?format=Vinyl&currency=EUR&q=%s", searchWord);
 
@@ -19,11 +19,11 @@ public class DiscogsScroll {
 
         List<HtmlAnchor> links = htmlPage.getByXPath(".//a[@class='item_description_title']");
 
-        String results = "";
         int limit = 5;
         String title;
         String price;
-        String resultUrl ="";
+        String resultUrl;
+        ArrayList<Scroll>scrolls = new ArrayList<>();
         for (int i = 0; i < links.size(); i++) {
             if (i == limit){
                 break;
@@ -33,19 +33,14 @@ public class DiscogsScroll {
             try{
                 HtmlPage htmlPage1 = webClient.getPage(resultUrl);
                 price = ((HtmlSpan) htmlPage1.getByXPath(".//span[@class='price']").get(0)).getTextContent();
-                String head = VinyleController.checkDescription((HtmlDivision) htmlPage1.getByXPath(".//div[@class='head']").get(0));
-                String content = VinyleController.checkDescription((HtmlAnchor) htmlPage1.getByXPath(".//div[@class='content']//a").get(0));
+                String head = ((HtmlDivision) htmlPage1.getByXPath(".//div[@class='head']").get(0)).getTextContent();
+                String content = ((HtmlAnchor) htmlPage1.getByXPath(".//div[@class='content']//a").get(0)).getTextContent();
                 String description = head+"   "+content;
-                results += "Title :- " + title + '\n' +
-                        "Price :- " + price + '\n' +
-                        "Description :-  " +'\n' +
-                        "              " + description  +'\n' +
-                        "URL :- " + resultUrl +
-                        "\n--------------------------------------------------------------------------------------------\n";
+                scrolls.add(new Scroll(title,null,price,null,description,resultUrl));
             } catch(Exception e){
                 e.printStackTrace();
             }
         }
-        return results;
+        return scrolls;
     }
 }

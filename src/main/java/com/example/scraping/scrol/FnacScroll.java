@@ -31,7 +31,8 @@ public class FnacScroll {
                 try{
                     HtmlPage htmlPage1 = webClient.getPage(resultUrl);
                     title = ((HtmlHeading1) htmlPage1.getByXPath("//h1[@class='f-productHeader-Title']").get(0)).getTextContent();
-                    price = ((HtmlElement) htmlPage1.getByXPath("//span[@class='f-faPriceBox__price userPrice js-ProductBuy-standardCheckable']").get(0)).getTextContent();
+                    //price = ((HtmlElement) htmlPage1.getByXPath("//span[@class='f-faPriceBox__price userPrice js-ProductBuy-standardCheckable checked']").get(0)).getTextContent();
+                    price = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[2]/div/div[1]/div[2]/div[3]/div[1]/form/div/div[1]/label[1]/div[2]/span").get(0)).getTextContent();
                     description = ((HtmlDivision) htmlPage1.getByXPath("//div[@class='f-productDesc__raw']").get(0)).getTextContent();
                     results += "Title :- " + title + '\n' +
                             "Price :- " + price + '\n' +
