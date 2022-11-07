@@ -85,17 +85,15 @@ public class VinyleController {
                 err = "Enter or choose a search field";
             } else {
                 if(dis.isSelected()){
+                    scrollArrayList = discogsScroll.search(searchWord);
                     results = discogsScroll.search(inputModify(searchWord)).toString();
                     showresults.setText(results);
                 } else if(fnac.isSelected()){
-                    results = fnacScroll.search(inputModify(searchWord));
+                    scrollArrayList = fnacScroll.search(inputModify(searchWord));
+                    results = fnacScroll.search(inputModify(searchWord)).toString();
                     showresults.setText(results);
                 } else if (vin.isSelected()){
                     scrollArrayList = vinylCornerScroll.search(searchWord);
-//                    for (int i = 0; i <scrollArrayList.size() ; i++) {
-//
-//                    }
-
                     results = vinylCornerScroll.search(searchWord).toString();
                     showresults.setText(results);
                 } else if(leb.isSelected()) {
@@ -103,13 +101,16 @@ public class VinyleController {
                         minValue = "0";
                         maxValue = String.valueOf(Integer.MAX_VALUE);
                     }
-                    results = leboncoinScroll.search (searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue));
+                    scrollArrayList = leboncoinScroll.search(searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue));
+                    results = leboncoinScroll.search (searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue)).toString();
                     showresults.setText(results);
                 }else if(mes.isSelected()){
-                    results = mesvinylesScroll.search(searchWord);
+                    scrollArrayList = mesvinylesScroll.search(searchWord);
+                    results = mesvinylesScroll.search(searchWord).toString();
                     showresults.setText(results);
                 } else if (cul.isSelected()){
-                    results = cultureFactoryScroll.search(inputModify(title));
+                    scrollArrayList = cultureFactoryScroll.search(inputModify(title));
+                    results = cultureFactoryScroll.search(inputModify(title)).toString();
                     showresults.setText(results);
                 }
                 else {

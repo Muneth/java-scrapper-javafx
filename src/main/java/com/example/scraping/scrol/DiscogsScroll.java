@@ -22,8 +22,12 @@ public class DiscogsScroll {
         int limit = 5;
         String title;
         String price;
+        String description;
+        String genre;
         String resultUrl;
-        ArrayList<Scroll>scrolls = new ArrayList<>();
+        String date;
+        String imageUrl;
+        ArrayList <Scroll> scrolls = new ArrayList<>();
         for (int i = 0; i < links.size(); i++) {
             if (i == limit){
                 break;
@@ -32,11 +36,14 @@ public class DiscogsScroll {
             resultUrl = String.valueOf(links.get(i).click().getUrl());
             try{
                 HtmlPage htmlPage1 = webClient.getPage(resultUrl);
-                price = ((HtmlSpan) htmlPage1.getByXPath(".//span[@class='price']").get(0)).getTextContent();
+                genre = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[1]/div[4]/div[1]/div/div[1]/div/div[1]/div[11]").get(0)).getTextContent();
+                price = ((HtmlSpan) htmlPage1.getByXPath("/html/body/div[1]/div[4]/div[2]/div/div[1]/div/div/p/span[1]").get(0)).getTextContent();
+                date = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[1]/div[4]/div[1]/div/div[1]/div/div[1]/div[9]").get(0)).getTextContent();
                 String head = ((HtmlDivision) htmlPage1.getByXPath(".//div[@class='head']").get(0)).getTextContent();
                 String content = ((HtmlAnchor) htmlPage1.getByXPath(".//div[@class='content']//a").get(0)).getTextContent();
-                String description = head+"   "+content;
-                scrolls.add(new Scroll(title,null,price,null,description,resultUrl));
+                description = head+"   "+content;
+                imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath("/html/body/div[1]/div[4]/div[1]/div/div[1]/div/div[2]/a/span[2]/img")).getSrcAttribute();
+                scrolls.add(new Scroll(title,genre,price,date,description,imageUrl));
             } catch(Exception e){
                 e.printStackTrace();
             }

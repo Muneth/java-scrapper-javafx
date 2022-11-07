@@ -13,9 +13,10 @@ public class BddController {
             Class.forName("com.mysql.jdbc.Driver");
 
 //      Create the connection...
-            String user = "root";
+            String user = "";
             String password = "";
-            String url = "jdbc:mysql://localhost:3306/vinyles";
+            String url = "jdbc:mysql://localhost:3306/vinyles-test";
+
             con = DriverManager.getConnection(url,user,password);
 
         } catch (Exception e){
