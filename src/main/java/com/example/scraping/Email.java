@@ -12,12 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * The type Email.
+ */
 public class Email {
+    /**
+     * Send mail.
+     *
+     * @param mail     the mail
+     * @param filename the filename
+     */
     public void sendMail(String mail, String filename) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         // Configure API key authorization: api-key
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey("");
+        apiKey.setApiKey("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");
 
         try {
             TransactionalEmailsApi api = new TransactionalEmailsApi();

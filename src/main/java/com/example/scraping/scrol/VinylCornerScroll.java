@@ -8,7 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Vinyl corner scroll.
+ */
 public class VinylCornerScroll {
+    /**
+     * Search array list.
+     *
+     * @param searchWord the search word
+     * @param min        the min
+     * @param max        the max
+     * @param year       the year
+     * @return the array list
+     * @throws Exception the exception
+     */
     public ArrayList<Scroll> search(String searchWord, double min, double max, String year) throws Exception {
 
         String url = "https://www.vinylcorner.fr/catalogsearch/result/?q=" + searchWord;

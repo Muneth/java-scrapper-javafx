@@ -5,7 +5,20 @@ import com.gargoylesoftware.htmlunit.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * The type Leboncoin scroll.
+ */
 public class LeboncoinScroll {
+    /**
+     * Search array list.
+     *
+     * @param searchWord the search word
+     * @param min        the min
+     * @param max        the max
+     * @return the array list
+     * @throws Exception the exception
+     */
     public ArrayList<Scroll> search(String searchWord, int min, int max) throws Exception{
 
         String url = String.format("https://www.leboncoin.fr/recherche?text=%s", searchWord.replace(" ", "%20"))+ "&price="+ min + "-" + max;

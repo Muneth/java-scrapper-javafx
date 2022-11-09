@@ -16,13 +16,37 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * The type Vinyle controller.
+ */
 public class VinyleController {
+    /**
+     * The Discogs scroll.
+     */
     DiscogsScroll discogsScroll = new DiscogsScroll();
+    /**
+     * The Fnac scroll.
+     */
     FnacScroll fnacScroll = new FnacScroll();
+    /**
+     * The Vinyl corner scroll.
+     */
     VinylCornerScroll vinylCornerScroll = new VinylCornerScroll();
+    /**
+     * The Leboncoin scroll.
+     */
     LeboncoinScroll leboncoinScroll = new LeboncoinScroll();
+    /**
+     * The Mesvinyles scroll.
+     */
     MesvinylesScroll mesvinylesScroll = new MesvinylesScroll();
+    /**
+     * The Culture factory scroll.
+     */
     CultureFactoryScroll cultureFactoryScroll = new CultureFactoryScroll();
+    /**
+     * The Email.
+     */
     Email email = new Email();
     @FXML
     private MenuItem quitter, saveastextfile, addbdd, basededonnes;
@@ -41,13 +65,25 @@ public class VinyleController {
     @FXML
     private TextArea showresults;
 
+    /**
+     * Instantiates a new Vinyle controller.
+     *
+     * @throws IOException the io exception
+     */
     public VinyleController() throws IOException {
     }
 
+    /**
+     * Close app.
+     */
     @FXML
     protected void closeApp(){
         Platform.exit();
     }
+
+    /**
+     * Clear field.
+     */
     @FXML
     public void clearField(){
         titre.setText("");
@@ -67,7 +103,17 @@ public class VinyleController {
 
     }
 
+    /**
+     * The Scroll array list.
+     */
     ArrayList<Scroll> scrollArrayList = new ArrayList<>();
+
+    /**
+     * Display search array list.
+     *
+     * @return the array list
+     * @throws Exception the exception
+     */
     public ArrayList<Scroll> displaySearch() throws Exception {
         String err = "";
         String title = titre.getText();
@@ -142,6 +188,11 @@ public class VinyleController {
         return scrollArrayList;
     }
 
+    /**
+     * Make text file.
+     *
+     * @throws Exception the exception
+     */
     @FXML
     public void makeTextFile() throws Exception {
         String title = titre.getText();
@@ -173,6 +224,12 @@ public class VinyleController {
         }
     }
 
+    /**
+     * Convert to double double.
+     *
+     * @param price the price
+     * @return the double
+     */
     public static double convertToDouble(String price){
         String priceFinal = price.substring(0, price.indexOf(","));
        priceFinal =  priceFinal.replaceAll("[^0-9]", "");
@@ -182,16 +239,34 @@ public class VinyleController {
     }
 
 
+    /**
+     * Convert fnac double double.
+     *
+     * @param price the price
+     * @return the double
+     */
     public static double convertFnacDouble(String price){
         String priceFinal = price.trim();
         priceFinal = priceFinal.replaceAll("€", "");
         return Double.parseDouble(priceFinal);
     }
 
+    /**
+     * Get year string.
+     *
+     * @param inputDate the input date
+     * @return the string
+     */
     public static String getYear(String inputDate){
         return inputDate.substring(6);
     }
 
+    /**
+     * Fnac year string.
+     *
+     * @param inputDate the input date
+     * @return the string
+     */
     public static String fnacYear(String inputDate){
         return inputDate.replaceAll("[^0-9]", "");
     }
@@ -216,11 +291,22 @@ public class VinyleController {
         return res;
     }
 
+    /**
+     * Check if null string.
+     *
+     * @param s the s
+     * @return the string
+     */
     public static String checkIfNull(String s) {
         if (s.equals("")) return "No Value";
         return s;
     }
 
+    /**
+     * Send mail pop up.
+     *
+     * @throws Exception the exception
+     */
     public void sendMailPopUp() throws Exception {
         makeTextFile();
         Stage emailPopUp=new Stage();
@@ -241,6 +327,12 @@ public class VinyleController {
         emailPopUp.showAndWait();
     }
 
+    /**
+     * Db scene stage.
+     *
+     * @return the stage
+     * @throws IOException the io exception
+     */
     public Stage DbScene() throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader(VinyleApplication.class.getResource("ihmBDD.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 800);
@@ -252,6 +344,9 @@ public class VinyleController {
     }
 
 
+    /**
+     * Bdd validation pop up.
+     */
     @FXML
     protected void bddValidationPopUp(){
         Stage popupwindow=new Stage();
@@ -279,6 +374,11 @@ public class VinyleController {
     }
 
 
+    /**
+     * Send to db.
+     *
+     * @throws Exception the exception
+     */
     public void sendToDB() throws Exception {
         BddController bddController = new BddController();
         ArrayList<Scroll> scrollListToDb = displaySearch();

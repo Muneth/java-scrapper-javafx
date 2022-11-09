@@ -18,6 +18,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * The type Bdd controller.
+ */
 public class BddController {
     @FXML
     private TextField bddserver, bddnom, bddport, bddlogin, bddpassword;
@@ -25,13 +28,25 @@ public class BddController {
     private Label error;
     @FXML
     private Button bddvalider, bddfermer;
+    /**
+     * The Con.
+     */
     Connection con;
+    /**
+     * The Err.
+     */
     String err = "";
     private String serverbdd = "";
     private String nombdd = "";
     private String portbdd = "";
     private String loginbdd = "";
     private String passwordbdd = "";
+
+    /**
+     * Create c connection.
+     *
+     * @return the connection
+     */
     public Connection createC(){
         try{
 //      Load the driver
@@ -82,6 +97,12 @@ public class BddController {
         return con;
     }
 
+    /**
+     * Insert vinyles boolean.
+     *
+     * @param scroll the scroll
+     * @return the boolean
+     */
     public boolean insertVinyles(Scroll scroll){
         boolean f = false;
 
@@ -112,12 +133,20 @@ public class BddController {
         return f;
     }
 
+    /**
+     * Close page.
+     */
     @FXML
     protected void closePage() {
         Stage stage = (Stage) bddfermer.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Gets bdd details.
+     *
+     * @throws IOException the io exception
+     */
     @FXML
     protected void getBddDetails() throws IOException {
         serverbdd = bddserver.getText();

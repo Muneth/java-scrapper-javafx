@@ -5,7 +5,20 @@ import com.gargoylesoftware.htmlunit.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * The type Discogs scroll.
+ */
 public class DiscogsScroll {
+    /**
+     * Search array list.
+     *
+     * @param searchWord the search word
+     * @param min        the min
+     * @param max        the max
+     * @return the array list
+     * @throws Exception the exception
+     */
     public ArrayList<Scroll> search(String searchWord, double min ,double max) throws Exception{
 
         String url = String.format("https://www.discogs.com/fr/sell/list?format=Vinyl&currency=EUR&q=%s", searchWord);
