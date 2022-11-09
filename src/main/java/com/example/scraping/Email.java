@@ -17,7 +17,7 @@ public class Email {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         // Configure API key authorization: api-key
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey("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");
+        apiKey.setApiKey("");
 
         try {
             TransactionalEmailsApi api = new TransactionalEmailsApi();
