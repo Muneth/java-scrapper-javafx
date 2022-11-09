@@ -6,7 +6,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import java.util.ArrayList;
 import java.util.List;
 public class DiscogsScroll {
-    public ArrayList<Scroll> search(String searchWord) throws Exception{
+    public ArrayList<Scroll> search(String searchWord, double min ,double max) throws Exception{
 
         String url = String.format("https://www.discogs.com/fr/sell/list?format=Vinyl&currency=EUR&q=%s", searchWord);
 
@@ -19,7 +19,7 @@ public class DiscogsScroll {
 
         List<HtmlAnchor> links = htmlPage.getByXPath(".//a[@class='item_description_title']");
 
-        int limit = 5;
+        int limit = 15;
         String title;
         String price;
         String description;
@@ -43,7 +43,10 @@ public class DiscogsScroll {
                 String content = ((HtmlAnchor) htmlPage1.getByXPath(".//div[@class='content']//a").get(0)).getTextContent();
                 description = head+"   "+content;
                 imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath("/html/body/div[1]/div[4]/div[1]/div/div[1]/div/div[2]/a/span[2]/img")).getSrcAttribute();
-                scrolls.add(new Scroll(title,genre,price,date,description,imageUrl));
+                double prix = VinyleController.convertToDouble(price);
+                if(prix>=min && prix<=max) {
+                    scrolls.add(new Scroll(title, genre, String.valueOf(prix + " €"), date, description, imageUrl));
+                }
             } catch(Exception e){
                 e.printStackTrace();
             }

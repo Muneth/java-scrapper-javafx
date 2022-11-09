@@ -5,8 +5,10 @@ import com.gargoylesoftware.htmlunit.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 public class FnacScroll {
-    public ArrayList<Scroll> search(String searchWord) throws Exception{
+    public ArrayList<Scroll> search(String searchWord, double min ,double max,  String year) throws Exception{
 
         String urlGenre = "https://www.fnac.com/SearchResult/ResultList.aspx?SCat=3%211&Search=" + searchWord;
 
@@ -19,7 +21,7 @@ public class FnacScroll {
 
         List<HtmlAnchor> links = htmlPage.getByXPath("//a[@class='Article-title js-Search-hashLink']");
 
-        int limit = 1;
+        int limit = 5;
         String title;
         String price;
         String description;
@@ -41,7 +43,16 @@ public class FnacScroll {
                     date = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[2]/div/div[1]/div[2]/div[2]/div/div[2]/dl[2]/dd/p").get(0)).getTextContent();
                     description = ((HtmlDivision) htmlPage1.getByXPath("//div[@class='f-productDesc__raw']").get(0)).getTextContent();
                     imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath(".//img[@class='f-productMedias__viewItem--main']")).getSrcAttribute();
-                    scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                    double prix = VinyleController.convertFnacDouble(price);
+                    String scrollYear = VinyleController.fnacYear(date);
+                    if(!Objects.equals(year, scrollYear)) {
+                        System.out.println("No album found ...");
+                        break;
+                    } else {
+                        if(prix>=min && prix<=max){
+                            scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                        }
+                    }
                 } catch(Exception e){
                     e.printStackTrace();
                 }

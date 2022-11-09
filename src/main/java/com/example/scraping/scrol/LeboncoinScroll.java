@@ -19,7 +19,7 @@ public class LeboncoinScroll {
 
         List<HtmlAnchor> links = htmlPage.getByXPath("//a[@data-qa-id='aditem_container']");
 
-        int limit = 3;
+        int limit = 10;
         String title;
         String price;
         String description;

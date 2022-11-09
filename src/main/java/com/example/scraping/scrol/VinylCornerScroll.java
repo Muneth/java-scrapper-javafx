@@ -6,11 +6,13 @@ import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLImageElement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class VinylCornerScroll {
-    public ArrayList<Scroll> search(String searchWord) throws Exception {
+    public ArrayList<Scroll> search(String searchWord, double min, double max, String year) throws Exception {
 
-        String url = "https://www.vinylcorner.fr/recherche?controller=search&s=" + searchWord;
+        String url = "https://www.vinylcorner.fr/catalogsearch/result/?q=" + searchWord;
+
 
         WebClient webClient = new WebClient();
 
@@ -19,16 +21,16 @@ public class VinylCornerScroll {
         webClient.getOptions().setJavaScriptEnabled(false);
         HtmlPage htmlPage = webClient.getPage(url);
 
-        List<HtmlAnchor> links = htmlPage.getByXPath("//a[@class='btn btn-details']");
+        List<HtmlAnchor> links = htmlPage.getByXPath("//a[@class='product photo product-item-photo']");
 
-        int limit = 5;
+        int limit = 10;
         String title;
         String price;
         String description;
         String genre = "";
         String resultUrl;
-        String date = "";
-        String imageUrl;
+        String date;
+        String imageUrl="";
         ArrayList <Scroll> scrolls = new ArrayList<>();
         for (int i = 0; i < links.size(); i++) {
             if (i == limit) {
@@ -37,13 +39,22 @@ public class VinylCornerScroll {
             resultUrl = String.valueOf(links.get(i).click().getUrl());
             try {
                 HtmlPage htmlPage1 = webClient.getPage(resultUrl);
-                title = ((HtmlHeading1) htmlPage1.getByXPath(".//h1[@class='productpage_title']").get(0)).getTextContent();
+                title = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[2]/main/div/div/div/div[2]/div[2]/p").get(0)).getTextContent();
 //                genre = ((HtmlElement) htmlPage1.getByXPath(".//p[@class='ref-genre-cat show-list-only']").get(0)).getTextContent();
-                price = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/section/div[2]/div/div/div/section/div[1]/div[2]/div[2]/div[1]/div/span").get(0)).getTextContent();
-//                date = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/section/div[2]/div/div/div/section/div[1]/div[2]/div[1]/p[2]/strong").get(0)).getTextContent();
-                description = ((HtmlDivision) htmlPage1.getByXPath(".//div[@class='product-description']").get(0)).getTextContent();
-                imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath(".//img[@class='js-qv-product-cover']")).getSrcAttribute();
-                scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                price = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[2]/main/div/div/div/div[2]/div[2]/div[4]/div/span/span/span").get(0)).getTextContent();
+                date = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[2]/main/div/div/div/div[5]/div[2]/div/div/div[1]/div[2]/p[2]").get(0)).getTextContent();
+                description = ((HtmlElement) htmlPage1.getByXPath("/html/body/div[2]/main/div/div/div/div[2]/div[2]/div[3]/span/span").get(0)).getTextContent();
+                //imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath("/html/body/div[2]/main/div/div/div/div[2]/div[1]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]/img")).getSrcAttribute();
+                double prix = VinyleController.convertToDouble(price);
+                String scrollYear = VinyleController.getYear(date);
+                if(!Objects.equals(year, scrollYear)){
+                    System.out.println("No album found ...");
+                    break;
+                } else {
+                    if(prix>=min && prix<=max){
+                    scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

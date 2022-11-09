@@ -6,7 +6,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import java.util.ArrayList;
 import java.util.List;
 public class MesvinylesScroll {
-    public ArrayList<Scroll> search(String searchWord) throws Exception{
+    public ArrayList<Scroll> search(String searchWord, double min ,double max) throws Exception{
 
         String url = "https://mesvinyles.fr/fr/recherche?controller=search&s=" + searchWord;
 
@@ -19,7 +19,7 @@ public class MesvinylesScroll {
 
         List<HtmlAnchor> links = htmlPage.getByXPath("//a[@class='thumbnail product-thumbnail']");
 
-        int limit = 5;
+        int limit = 15;
         String title;
         String price;
         String description;
@@ -41,7 +41,10 @@ public class MesvinylesScroll {
                     date = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/section/div/div/div/section/div[1]/div[2]/div[2]/div[1]/p[1]").get(0)).getTextContent();
                     description = ((HtmlDivision) htmlPage1.getByXPath(".//div[@class='product-description']").get(0)).getTextContent();
                     imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath(".//img[@class='js-qv-product-cover']")).getSrcAttribute();
-                    scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                    double prix = VinyleController.convertToDouble(price);
+                    if(prix>=min && prix<=max){
+                        scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                    }
                 } catch(Exception e){
                     e.printStackTrace();
                 }

@@ -4,6 +4,7 @@ package com.example.scraping;
 import com.example.scraping.scrol.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -24,13 +25,13 @@ public class VinyleController {
     CultureFactoryScroll cultureFactoryScroll = new CultureFactoryScroll();
     Email email = new Email();
     @FXML
-    private MenuItem quitter, saveastextfile, addbdd;
+    private MenuItem quitter, saveastextfile, addbdd, basededonnes;
     @FXML
     private TextField titre,min, max;
     @FXML
     private ComboBox<String> genre;
     @FXML
-    private DatePicker date;
+    private  DatePicker date;
     @FXML
     private CheckBox dis, fnac, vin, leb, mes, cul;
     @FXML
@@ -68,13 +69,34 @@ public class VinyleController {
 
     ArrayList<Scroll> scrollArrayList = new ArrayList<>();
     public ArrayList<Scroll> displaySearch() throws Exception {
+        String err = "";
         String title = titre.getText();
         String type = genre.getValue();
-        String time = String.valueOf(date.getValue());
-        String minValue = min.getText();
-        String maxValue = max.getText();
+        String year = "";
+        double minValue = (double) 0;
+        double maxValue = (double) 0;
+        try {
+            if(date.getValue() == null) {
+                throw new NullPointerException();
+            }
+            year = String.valueOf(date.getValue().getYear());
+        } catch (Exception e){
+//            err = "Enter Date to filter search";
+            year = "2022";
+            e.printStackTrace();
+        }
+
+        try {
+            minValue = Double.parseDouble(min.getText());
+            maxValue = Double.parseDouble(max.getText());
+
+        } catch (Exception e ){
+//            err = "Enter a min-max to narrow the search";
+            minValue = 0;
+            maxValue = Integer.MAX_VALUE;
+            e.printStackTrace();
+        }
         String results = "";
-        String err = "";
         if(type.equals("Selectionnez un genre")){
             type = "";
         }
@@ -85,32 +107,28 @@ public class VinyleController {
                 err = "Enter or choose a search field";
             } else {
                 if(dis.isSelected()){
-                    scrollArrayList = discogsScroll.search(searchWord);
-                    results = discogsScroll.search(inputModify(searchWord)).toString();
+                    scrollArrayList = discogsScroll.search(searchWord, minValue, maxValue);
+                    results = discogsScroll.search(inputModify(searchWord), minValue, maxValue).toString();
                     showresults.setText(results);
                 } else if(fnac.isSelected()){
-                    scrollArrayList = fnacScroll.search(inputModify(searchWord));
-                    results = fnacScroll.search(inputModify(searchWord)).toString();
+                    scrollArrayList = fnacScroll.search(inputModify(searchWord), minValue, maxValue, year);
+                    results = fnacScroll.search(inputModify(searchWord), minValue, maxValue, year).toString();
                     showresults.setText(results);
                 } else if (vin.isSelected()){
-                    scrollArrayList = vinylCornerScroll.search(searchWord);
-                    results = vinylCornerScroll.search(searchWord).toString();
+                    scrollArrayList = vinylCornerScroll.search(inputModify(searchWord), minValue, maxValue, year);
+                    results = vinylCornerScroll.search(inputModify(searchWord), minValue, maxValue,year).toString();
                     showresults.setText(results);
                 } else if(leb.isSelected()) {
-                    if(minValue.equals("")|| maxValue.equals("")){
-                        minValue = "0";
-                        maxValue = String.valueOf(Integer.MAX_VALUE);
-                    }
-                    scrollArrayList = leboncoinScroll.search(searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue));
-                    results = leboncoinScroll.search (searchWord, Integer.parseInt(minValue), Integer.parseInt(maxValue)).toString();
+                    scrollArrayList = leboncoinScroll.search(searchWord, (int) minValue, (int) maxValue);
+                    results = leboncoinScroll.search (searchWord, (int) minValue, (int) maxValue).toString();
                     showresults.setText(results);
                 }else if(mes.isSelected()){
-                    scrollArrayList = mesvinylesScroll.search(searchWord);
-                    results = mesvinylesScroll.search(searchWord).toString();
+                    scrollArrayList = mesvinylesScroll.search(searchWord,  minValue, maxValue);
+                    results = mesvinylesScroll.search(searchWord, minValue, maxValue).toString();
                     showresults.setText(results);
                 } else if (cul.isSelected()){
-                    scrollArrayList = cultureFactoryScroll.search(inputModify(title));
-                    results = cultureFactoryScroll.search(inputModify(title)).toString();
+                    scrollArrayList = cultureFactoryScroll.search(inputModify(title), minValue, maxValue);
+                    results = cultureFactoryScroll.search(inputModify(title), minValue, maxValue).toString();
                     showresults.setText(results);
                 }
                 else {
@@ -155,6 +173,29 @@ public class VinyleController {
         }
     }
 
+    public static double convertToDouble(String price){
+        String priceFinal = price.substring(0, price.indexOf(","));
+       priceFinal =  priceFinal.replaceAll("[^0-9]", "");
+       priceFinal = priceFinal.replaceAll("€", "");
+//        priceFinal = priceFinal.replaceAll(",",".");
+        return Double.parseDouble(priceFinal);
+    }
+
+
+    public static double convertFnacDouble(String price){
+        String priceFinal = price.trim();
+        priceFinal = priceFinal.replaceAll("€", "");
+        return Double.parseDouble(priceFinal);
+    }
+
+    public static String getYear(String inputDate){
+        return inputDate.substring(6);
+    }
+
+    public static String fnacYear(String inputDate){
+        return inputDate.replaceAll("[^0-9]", "");
+    }
+
     private String toCapitalize(String str){
         if(titre.getText().equals("")){
             return str;
@@ -176,7 +217,7 @@ public class VinyleController {
     }
 
     public static String checkIfNull(String s) {
-        if (s.equals("")) return "No Description";
+        if (s.equals("")) return "No Value";
         return s;
     }
 
@@ -200,6 +241,43 @@ public class VinyleController {
         emailPopUp.showAndWait();
     }
 
+    public Stage DbScene() throws IOException{
+        FXMLLoader fxmlLoader = new FXMLLoader(VinyleApplication.class.getResource("ihmBDD.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
+        Stage stage = new Stage();
+        stage.setTitle("Parameters de la base de donnes");
+        stage.setScene(scene);
+        stage.show();
+        return stage;
+    }
+
+
+    @FXML
+    protected void bddValidationPopUp(){
+        Stage popupwindow=new Stage();
+        popupwindow.initModality(Modality.APPLICATION_MODAL);
+        popupwindow.setTitle("Transmission BDD");
+        Label label1= new Label("Transmission des donnees a la base de donnees");
+        Label label2 = new Label("Cliquez sur Valider por lancer la transmission: ");
+        Button button1=new Button("valider");
+        button1.setOnAction(e -> {
+            try {
+                sendToDB();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        Button button2= new Button("fermer");
+        button2.setOnAction(e -> popupwindow.close());
+        VBox layout= new VBox(10);
+        layout.getChildren().addAll(label1, label2,button1, button2);
+        layout.setAlignment(Pos.CENTER);
+        Scene scene1= new Scene(layout, 300, 250);
+        popupwindow.setScene(scene1);
+        popupwindow.showAndWait();
+
+    }
+
 
     public void sendToDB() throws Exception {
         BddController bddController = new BddController();
@@ -207,9 +285,9 @@ public class VinyleController {
         for (Scroll scroll : scrollListToDb) {
             boolean answer = bddController.insertVinyles(scroll);
             if (answer) {
-                System.out.println("Scroll is added successfully");
+                System.out.println("Scraps are added successfully");
             } else {
-                System.out.println("Something went wrong...");
+                System.out.println("Something went wrong while sending to DB...");
             }
         }
     }

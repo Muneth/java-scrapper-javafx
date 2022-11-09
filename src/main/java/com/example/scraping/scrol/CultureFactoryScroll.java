@@ -7,7 +7,7 @@ import com.gargoylesoftware.htmlunit.html.*;
 import java.util.ArrayList;
 import java.util.List;
 public class CultureFactoryScroll {
-    public ArrayList<Scroll> search(String searchWord) throws Exception{
+    public ArrayList<Scroll> search(String searchWord, double min ,double max) throws Exception{
 
         String url = "https://culturefactory.fr/recherche?controller=search&s=" + searchWord +"+vinyles";
 
@@ -28,7 +28,7 @@ public class CultureFactoryScroll {
         String date = "";
         String imageUrl;
         ArrayList<Scroll> scrolls = new ArrayList<>();
-        int limit = 5;
+        int limit = 10;
         for (int i = 0; i < links.size(); i++) {
             if (i == limit){
                 break;
@@ -41,7 +41,10 @@ public class CultureFactoryScroll {
                 price = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/div[1]/div[2]/div/div/section/div[1]/div[2]/div[1]/div[1]/div/span").get(0)).getTextContent();
                 description = ((HtmlElement) htmlPage1.getByXPath("/html/body/main/div[1]/div[2]/div/div/section/div[1]/div[4]/div/div/div[2]/section/dl/dd[1]").get(0)).getTextContent();
                 imageUrl = ((HtmlImage)htmlPage1.getFirstByXPath(".//img[@class='js-qv-product-cover']")).getSrcAttribute();
-                scrolls.add(new Scroll(title,genre,price,date, VinyleController.checkIfNull(description),VinyleController.checkIfNull(imageUrl)));
+                double prix = VinyleController.convertToDouble(price);
+                if(prix>=min && prix<=max) {
+                    scrolls.add(new Scroll(title, genre, price, date, VinyleController.checkIfNull(description), VinyleController.checkIfNull(imageUrl)));
+                }
             } catch(Exception e){
                 e.printStackTrace();
             }
