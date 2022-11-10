@@ -1,5 +1,1 @@
-localhost
-vinyles-test
-3306
-root
 
