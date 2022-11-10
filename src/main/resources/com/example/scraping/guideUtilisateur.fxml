@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="624.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.scraping.GuideUtilisateur">
+   <children>
+      <TextArea layoutX="-3.0" layoutY="-3.0" prefHeight="446.0" prefWidth="870.0" text="&#10;Guide utilisateur :- &#10;&#10;&#10;L’application - (Scrapping) est vraiment facile à utiliser.  &#10;&#10;L'application est conçue pour supprimer différents vinyles d'artistes de différents sites &#10;&#10; &#10;En partant du côté droit de l'application, vous pouvez choisir le site que vous souhaitez scrapper. &#10;                                                                                                                                          &#10;&#10;Puis sur le côté gauche de l'application, vous pouvez entrer les détails de l'artiste ou du genre pour faire du scrap. Vous pouvez filtrer votre recherche par prix et par année.  &#10;&#10;&#10;La fenêtre du bas affichera vos résultats. &#10;&#10; &#10;Dans le menu du haut le bouton 'Fichier' vous permettra de sauvegarder votre recherche dans un fichier texte, d'envoyer les résultats par e-mail ou de les sauvegarder dans la base de données. &#10;&#10;Vous pouvez ajouter les détails de votre base de données avec le bouton ‘Paramètres’ - Base de donnes. &#10;&#10;Et vous pouvez toujours utiliser &quot;l'aide&quot; pour utiliser l'application &#10;&#10; " />
+      <Button fx:id="fermerguide" layoutX="353.0" layoutY="478.0" mnemonicParsing="false" onAction="#closeGuide" prefHeight="26.0" prefWidth="125.0" text="Fermer" />
+   </children>
+</AnchorPane>

@@ -81,7 +81,7 @@
                 <MenuItem fx:id="basededonnes" mnemonicParsing="false" onAction="#DbScene" text="Base de donnes" />
             </Menu>
             <Menu mnemonicParsing="false" text="Aide">
-                <MenuItem mnemonicParsing="false" text="Mode d'emploi" />
+                <MenuItem fx:id="modedemploi" mnemonicParsing="false" onAction="#guideUtilisateur" text="Mode d'emploi" />
             </Menu>
         </MenuBar>
     </AnchorPane>

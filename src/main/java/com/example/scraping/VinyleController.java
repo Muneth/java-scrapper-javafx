@@ -49,7 +49,7 @@ public class VinyleController {
      */
     Email email = new Email();
     @FXML
-    private MenuItem quitter, saveastextfile, addbdd, basededonnes;
+    private MenuItem quitter, saveastextfile, addbdd, basededonnes,modedemploi;
     @FXML
     private TextField titre,min, max;
     @FXML
@@ -343,6 +343,21 @@ public class VinyleController {
         return stage;
     }
 
+    /**
+     * Guide utilisateur stage.
+     *
+     * @return the stage
+     * @throws IOException the io exception
+     */
+    public Stage guideUtilisateur() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(VinyleApplication.class.getResource("guideUtilisateur.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
+        Stage stage = new Stage();
+        stage.setTitle("Mode d'emploi");
+        stage.setScene(scene);
+        stage.show();
+        return stage;
+    }
 
     /**
      * Bdd validation pop up.
